@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Study Buddy</title>
+<style>
+:root{--bg:#f6f3ff;--card:#fff;--tx:#2d2a45;--mut:#7a7699;--p:#8b6cf0;--p2:#ede9fe;--g:#d1fae5;--gt:#166534;--r:#ffe0e6;--rt:#9f1239;--y:#fef3c7;--b:#dbeafe;--sh:0 6px 20px rgba(120,100,200,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1830;--card:#25223f;--tx:#eceaff;--mut:#a29fc4;--p:#b9a4ff;--p2:#34305a;--g:#1f4d3a;--gt:#b7f5cf;--r:#56242f;--rt:#ffc9d3;--y:#4a4020;--b:#22364f;--sh:0 6px 20px rgba(0,0,0,.3)}}
+:root[data-theme="dark"]{--bg:#1a1830;--card:#25223f;--tx:#eceaff;--mut:#a29fc4;--p:#b9a4ff;--p2:#34305a;--g:#1f4d3a;--gt:#b7f5cf;--r:#56242f;--rt:#ffc9d3;--y:#4a4020;--b:#22364f;--sh:0 6px 20px rgba(0,0,0,.3)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--bg)}
+header b{font-size:20px}
+main{max-width:720px;margin:0 auto;padding:0 16px 100px}
+h3{margin:0 0 10px}h4{margin:12px 0 4px}
+.card{background:var(--card);border-radius:20px;padding:16px;margin:0 0 14px;box-shadow:var(--sh);transition:background .2s}
+.mut{color:var(--mut)}.err{background:var(--r);color:var(--rt)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+@media(min-width:560px){.grid.s{grid-template-columns:repeat(4,1fr)}}
+.grid .card{margin:0}.stat{text-align:center}.stat i{font-style:normal;font-size:24px}.stat b{display:block;font-size:24px}
+button,.btn{font:inherit;border:0;border-radius:14px;padding:10px 16px;background:var(--p);color:#fff;cursor:pointer;font-weight:600}
+button.g{background:var(--p2);color:var(--tx)}button.sm{padding:6px 12px;font-size:14px}
+button:disabled{opacity:.5}
+input,textarea,select{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:2px solid transparent;border-radius:14px;padding:10px 12px;margin:0 0 10px}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--p)}
+textarea{min-height:90px;resize:vertical}
+.drop{display:block;text-align:center;padding:22px;margin-bottom:10px;border:2px dashed var(--p);border-radius:16px;cursor:pointer;color:var(--p);font-weight:600}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.chip{display:inline-block;background:var(--p2);border-radius:99px;padding:4px 12px;font-size:14px;margin:0 6px 6px 0}
+.bar{height:8px;background:var(--p2);border-radius:9px;overflow:hidden;margin-top:6px}.bar div{height:100%;background:var(--p);border-radius:9px;transition:width .4s}
+.badge{border-radius:99px;padding:3px 12px;font-weight:700;font-size:14px}
+.hi{background:var(--g);color:var(--gt)}.md{background:var(--y)}.lo{background:var(--r);color:var(--rt)}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.tools button{background:var(--card);color:var(--tx);box-shadow:var(--sh);padding:12px 4px;font-size:14px}
+.tools button.on{background:var(--p);color:#fff}.tools i{display:block;font-style:normal;font-size:22px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);color:var(--tx);margin:6px 0;font-weight:500}
+.opt.ok{background:var(--g);color:var(--gt)}.opt.bad{background:var(--r);color:var(--rt)}
+.fc{cursor:pointer;min-height:90px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:600}
+.fc.flip{background:var(--b)}
+.bub{padding:10px 14px;border-radius:16px;margin:8px 0;max-width:90%}.u{background:var(--p);color:#fff;margin-left:auto}.a{background:var(--card);box-shadow:var(--sh)}
+ul{padding-left:20px;margin:6px 0}details summary{cursor:pointer}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;justify-content:center;gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -4px 18px rgba(120,100,200,.15)}
+nav button{flex:1;max-width:120px;background:none;color:var(--mut);padding:6px 2px;font-size:12px}
+nav button i{display:block;font-style:normal;font-size:22px}nav button.on{color:var(--p);background:var(--p2)}
+.big{font-size:48px;text-align:center}
+</style></head><body>
+<header><b>🎓 AI Study Buddy</b><button class="g sm" data-a="theme" aria-label="Toggle theme">🌓</button></header>
+<main id="app"></main>
+<nav>
+<button data-v="home" data-a="nav"><i>🏠</i>Home</button>
+<button data-v="lib" data-a="nav"><i>📚</i>Library</button>
+<button data-v="study" data-a="nav"><i>🧠</i>Study</button>
+<button data-v="test" data-a="nav"><i>🎯</i>Test Me</button>
+</nav>
+<script>
+const $=s=>document.querySelector(s);
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const md=t=>esc(t).replace(/^#{1,3} (.*)$/gm,'<h4>$1</h4>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^[-*] (.*)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/g,m=>'<ul>'+m.replace(/\n/g,'')+'</ul>').replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+let S={subjects:['General'],mats:[],quizzes:[]};
+try{Object.assign(S,JSON.parse(localStorage.getItem('sb')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('sb',JSON.stringify(S))}catch(e){}};
+try{const t=localStorage.getItem('sbt');if(t)document.documentElement.dataset.theme=t}catch(e){}
+let view='home',cur=null,tool=null,out={},chat=[],T=null,sample=null;
+const TOOLS={explain:['💡','Explain'],notes:['📝','Notes'],mcq:['✅','MCQs'],flash:['🃏','Flashcards'],qa:['❓','Key Q&A'],ask:['💬','Ask']};
+const mat=id=>S.mats.find(x=>x.id===id);
+const ctx=m=>'STUDY MATERIAL (title: '+m.name+'):\n'+m.text.slice(0,30000)+'\n\n';
+const cls=p=>p>=75?'hi':p>=50?'md':'lo';
+const fmt=d=>new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short'});
+const prog=m=>Math.round((m.done||[]).length/6*100);
+const mark=(m,t)=>{m.done=[...new Set([...(m.done||[]),t])];save()};
+(window.claude?claude.use('sample'):Promise.resolve(null)).then(s=>{sample=s;render()}).catch(()=>{});
+
+async function ai(p,o={}){
+  if(!sample)throw new Error('The AI works when this page is opened inside Claude (signed in). Open the artifact link from claude.ai.');
+  const op={modelTier:o.tier||'default',cache:false};
+  if(o.images)op.images=o.images;if(o.onText)op.onText=o.onText;
+  try{return o.json?await sample.json(p,op):(await sample(p,op)).text}
+  catch(e){throw new Error(e.code==='not_granted'?'AI access was declined. Reload and allow it to use the AI features.':e.code==='rate_limited'?'Too many requests - wait a moment and retry.':(e.message||'AI request failed'))}
+}
+
+/* ---------- views ---------- */
+function home(){
+  const q=S.quizzes,avg=q.length?Math.round(q.reduce((a,x)=>a+x.pct,0)/q.length):0;
+  const st=[['📚',S.mats.length,'Materials'],['🎯',q.length,'Quizzes'],['⭐',avg+'%','Avg score'],['🗂️',S.subjects.length,'Subjects']];
+  let h='<div class="grid s">'+st.map(s=>`<div class="card stat"><i>${s[0]}</i><b>${s[1]}</b><span class="mut">${s[2]}</span></div>`).join('')+'</div>';
+  if(!S.mats.length)return h+'<div class="card"><h3>👋 Welcome!</h3><p class="mut">Add your first study material (PDF, photo of notes, or pasted text) and your AI buddy will turn it into notes, quizzes and flashcards.</p><button data-a="nav" data-v="lib">Add material</button></div>';
+  h+='<div class="card"><h3>📈 Progress by subject</h3>'+S.subjects.filter(s=>S.mats.some(m=>m.subject===s)).map(s=>{
+    const ms=S.mats.filter(m=>m.subject===s),p=Math.round(ms.reduce((a,m)=>a+prog(m),0)/ms.length),qs=q.filter(x=>x.subject===s),sc=qs.length?Math.round(qs.reduce((a,x)=>a+x.pct,0)/qs.length)+'% quiz avg':'no quizzes yet';
+    return `<div style="margin:10px 0"><div class="row"><b>${esc(s)}</b><span class="mut">${ms.length} file${ms.length>1?'s':''} · ${sc}</span></div><div class="bar"><div style="width:${p}%"></div></div></div>`}).join('')+'</div>';
+  h+='<div class="card"><h3>📄 Study materials</h3>'+S.mats.slice().reverse().slice(0,6).map(m=>`<div class="row" style="margin:8px 0"><div style="flex:1;min-width:0"><b>${esc(m.name)}</b><div class="mut" style="font-size:13px">${esc(m.subject)} · ${prog(m)}% studied</div></div><button class="g sm" data-a="pick" data-v="${m.id}">Study</button></div>`).join('')+'</div>';
+  h+='<div class="card"><h3>🏆 Recent quizzes</h3>'+(q.length?q.slice().reverse().slice(0,5).map(x=>`<div class="row" style="margin:8px 0"><div><b>${esc(x.name)}</b><div class="mut" style="font-size:13px">${esc(x.subject)} · ${fmt(x.date)}</div></div><span class="badge ${cls(x.pct)}">${x.score}/${x.total} · ${x.pct}%</span></div>`).join(''):'<p class="mut">No quizzes yet - try Test Me!</p>')+'</div>';
+  return h;
+}
+function lib(){
+  return `<div class="card"><h3>➕ Add study material</h3>
+<input id="sn" list="sl" placeholder="Subject (e.g. Biology)"><datalist id="sl">${S.subjects.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>
+<label class="drop">📎 Upload PDF, image or text file<input type="file" id="fi" multiple accept=".pdf,.txt,.md,image/*" hidden></label>
+<input id="mt" placeholder="Title (for pasted text)"><textarea id="pt" placeholder="...or paste your notes / textbook text here"></textarea>
+<button data-a="addp">Add pasted text</button><div id="msg" class="mut" style="margin-top:10px"></div></div>
+<div class="card"><h3>📚 Your materials</h3>${S.mats.length?S.mats.slice().reverse().map(m=>`<div class="row" style="margin:10px 0"><div style="flex:1;min-width:0"><b>${esc(m.name)}</b><div class="mut" style="font-size:13px"><span class="chip">${esc(m.subject)}</span>${Math.round(m.text.length/1000)}k chars</div></div><div><button class="g sm" data-a="pick" data-v="${m.id}">Study</button> <button class="g sm" data-a="del" data-v="${m.id}" aria-label="Delete">🗑️</button></div></div>`).join(''):'<p class="mut">Nothing here yet.</p>'}</div>`;
+}
+function study(){
+  if(!S.mats.length)return '<div class="card"><p class="mut">Add a study material in the Library first.</p><button data-a="nav" data-v="lib">Go to Library</button></div>';
+  if(!mat(cur))cur=S.mats[S.mats.length-1].id;
+  let h=`<select id="ms">${S.mats.map(m=>`<option value="${m.id}" ${m.id===cur?'selected':''}>${esc(m.subject)} - ${esc(m.name)}</option>`).join('')}</select><div class="tools">${Object.entries(TOOLS).map(([k,v])=>`<button class="${tool===k?'on':''}" data-a="tool" data-v="${k}"><i>${v[0]}</i>${v[1]}</button>`).join('')}</div>`;
+  if(tool==='explain')h+='<div class="card"><input id="et" placeholder="Which topic is confusing? (leave empty for the hardest parts)"><button data-a="go">Explain it simply</button></div>';
+  if(tool==='ask')h+='<div class="card"><textarea id="aq" style="min-height:60px" placeholder="Ask anything about this material..."></textarea><button data-a="ask">Send</button></div>';
+  if(!tool)h+='<div class="card mut">Pick a tool above to get started 👆</div>';
+  return h+'<div id="out"></div>';
+}
+function outHTML(){
+  const th=out.loading?'<div class="card mut">✨ Thinking... this can take up to a minute.</div>':'',er=out.err?`<div class="card err">${esc(out.err)}</div>`:'';
+  if(tool==='ask')return chat.map(x=>`<div class="bub ${x.r}">${x.r==='a'?md(x.t):esc(x.t)}</div>`).join('')+th+er;
+  if(out.loading||out.err)return th+er;
+  if(out.text)return `<div class="card">${md(out.text)}</div>`;
+  if(out.mcq){const n=out.mcq.filter(q=>q.pick!=null),c=n.filter(q=>q.pick===q.answer).length;
+    return `<div class="card row"><b>Score</b><span class="badge ${cls(n.length?c/n.length*100:100)}">${c}/${n.length} answered</span></div>`+out.mcq.map((q,i)=>`<div class="card"><b>${i+1}. ${esc(q.q)}</b>${q.options.map((o,j)=>`<button class="opt ${q.pick==null?'':j===q.answer?'ok':j===q.pick?'bad':''}" data-a="mo" data-v="${i},${j}">${'ABCD'[j]}. ${esc(o)}</button>`).join('')}${q.pick!=null?`<p class="mut">💡 ${esc(q.explanation)}</p>`:''}</div>`).join('')}
+  if(out.flash)return '<p class="mut">Tap a card to flip it.</p><div class="grid">'+out.flash.map((f,i)=>`<div class="card fc ${f.flip?'flip':''}" data-a="fl" data-v="${i}">${esc(f.flip?f.back:f.front)}</div>`).join('')+'</div>';
+  if(out.qa)return out.qa.map(x=>`<details class="card"><summary><b>${esc(x.q)}</b></summary><p>${md(x.a)}</p></details>`).join('');
+  return '';
+}
+function test(){
+  if(!S.mats.length)return '<div class="card"><p class="mut">Add a study material first.</p><button data-a="nav" data-v="lib">Go to Library</button></div>';
+  if(!T)return `<div class="card"><h3>🎯 Test Me</h3><p class="mut">Questions come one at a time. Your answers are checked and explained, then you get a score.</p><select id="tm">${S.mats.map(m=>`<option value="${m.id}" ${m.id===cur?'selected':''}>${esc(m.name)}</option>`).join('')}</select><select id="tn"><option value="5">5 questions</option><option value="10">10 questions</option></select><button data-a="start">Start test</button></div>`;
+  if(T.loading)return '<div class="card mut">✨ Preparing your questions...</div>';
+  if(T.err)return `<div class="card err">${esc(T.err)}</div><button data-a="reset">Back</button>`;
+  const n=T.qs.length;
+  if(T.done){const p=Math.round(T.score/n*100);return `<div class="card"><div class="big">${p>=75?'🎉':p>=50?'👍':'💪'}</div><h3 style="text-align:center">You scored ${T.score}/${n} (${p}%)</h3><p class="mut" style="text-align:center">${p>=75?'Excellent work!':p>=50?'Good effort - review the tricky parts.':'Keep going - revisit the notes and try again.'}</p><div class="row" style="justify-content:center"><button data-a="reset">Try again</button><button class="g" data-a="nav" data-v="home">Dashboard</button></div></div>`}
+  const q=T.qs[T.i],f=T.fb;
+  let h=`<div class="card"><div class="row"><span class="mut">Question ${T.i+1} of ${n}</span><span class="badge md">Score ${T.score}</span></div><div class="bar"><div style="width:${T.i/n*100}%"></div></div><h3 style="margin-top:14px">${esc(q.q)}</h3>`;
+  if(q.type==='mcq')h+=q.options.map((o,j)=>`<button class="opt ${f?(j===q.answer?'ok':j===f.pick?'bad':''):''}" data-a="tmo" data-v="${j}">${'ABCD'[j]}. ${esc(o)}</button>`).join('');
+  else h+=`<textarea id="sa" placeholder="Type your answer..." ${f?'disabled':''}>${esc(f?f.mine:'')}</textarea>`+(f?'':`<button data-a="tms" ${T.checking?'disabled':''}>${T.checking?'Checking...':'Submit answer'}</button>`);
+  if(f)h+=`<div class="card ${f.ok?'hi':'lo'}" style="margin:12px 0 0;box-shadow:none"><b>${f.ok?'✅ Correct!':'❌ Not quite'}</b><br>${md(f.text||'')}</div><button style="margin-top:12px" data-a="next">${T.i+1<n?'Next question →':'See my score'}</button>`;
+  return h+'</div>';
+}
+function render(){
+  $('#app').innerHTML={home,lib,study,test}[view]();
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+  upd();
+}
+function upd(){const e=$('#out');if(e)e.innerHTML=outHTML()}
+
+/* ---------- study tools ---------- */
+async function run(t,topic){
+  const m=mat(cur);if(!m)return;out={loading:true};upd();
+  const live=x=>{out={text:x.text};upd()};
+  try{
+    if(t==='notes')out={text:await ai(ctx(m)+'Create concise, well-organised study notes in markdown: short headings, bullet points, key terms in **bold**, and a 3-line summary at the end.',{onText:live})};
+    if(t==='explain')out={text:await ai(ctx(m)+(topic?'Explain this topic from the material: "'+topic+'". ':'Pick the 3 hardest concepts in the material and explain each. ')+'Use simple language for a student, one everyday analogy per concept, and a tiny worked example where useful. Markdown, concise.',{onText:live})};
+    if(t==='mcq')out={mcq:(await ai(ctx(m)+'Create 8 multiple-choice questions on this material. Return ONLY a JSON array of {"q":string,"options":[4 strings],"answer":index 0-3,"explanation":string}.',{json:true})).map(q=>({...q,pick:null}))};
+    if(t==='flash')out={flash:await ai(ctx(m)+'Create 12 flashcards of key terms/ideas. Return ONLY a JSON array of {"front":short prompt,"back":concise answer}.',{json:true,tier:'quick'})};
+    if(t==='qa')out={qa:await ai(ctx(m)+'Write the 8 most important exam questions on this material with clear, complete model answers. Return ONLY a JSON array of {"q":string,"a":string}.',{json:true})};
+    mark(m,t);
+  }catch(e){out={err:e.message}}
+  upd();
+}
+async function ask(){
+  const el=$('#aq'),q=el.value.trim(),m=mat(cur);if(!q)return;el.value='';
+  const h=chat.slice(-6).map(x=>(x.r==='u'?'Student: ':'Tutor: ')+x.t).join('\n');
+  chat.push({r:'u',t:q});out={loading:true};upd();
+  try{const a=await ai(ctx(m)+"You are a friendly tutor. Answer using ONLY the material above; if it isn't covered, say so, then help from general knowledge and label it as such. Be concise.\n\n"+h+'\nStudent: '+q+'\nTutor:');chat.push({r:'a',t:a});out={};mark(m,'ask')}
+  catch(e){out={err:e.message}}
+  upd();
+}
+
+/* ---------- test me ---------- */
+async function start(){
+  const m=mat($('#tm').value),n=+$('#tn').value;cur=m.id;T={loading:true};render();
+  try{
+    const qs=await ai(ctx(m)+`Write ${n} exam-style questions from this material: about 60% multiple-choice, 40% short-answer. Return ONLY a JSON array of {"type":"mcq"|"short","q":string,"options":[4 strings, mcq only],"answer":index 0-3 for mcq OR a model answer string for short,"explanation":string}.`,{json:true});
+    T={mid:m.id,qs:qs.slice(0,n),i:0,score:0,fb:null};
+  }catch(e){T={err:e.message}}
+  render();
+}
+async function short(){
+  const q=T.qs[T.i],a=$('#sa').value.trim();if(!a)return;T.checking=true;T.fb=null;render();
+  try{
+    const r=await ai(`Question: ${q.q}\nModel answer: ${q.answer}\nStudent answer: ${a}\nGrade on meaning, not exact wording. Return ONLY JSON {"correct":boolean,"feedback":string (1-2 sentences)}`,{json:true,tier:'quick'});
+    T.fb={ok:!!r.correct,mine:a,text:r.feedback+'\n\n**Model answer:** '+q.answer+'\n'+(q.explanation||'')};if(r.correct)T.score++;
+  }catch(e){T.fb={ok:false,mine:a,text:'Could not check automatically.\n\n**Model answer:** '+q.answer}}
+  T.checking=false;render();
+}
+
+/* ---------- uploads ---------- */
+function addSubj(s){if(!S.subjects.includes(s))S.subjects.push(s)}
+function add(name,text,subject){addSubj(subject);const m={id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,subject,text:text.slice(0,60000),done:[],date:Date.now()};S.mats.push(m);cur=m.id;save()}
+const loadPdf=()=>window.pdfjsLib?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=ok;s.onerror=()=>no(new Error('Could not load the PDF reader'));document.head.appendChild(s)});
+async function pdfText(f){
+  await loadPdf();pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const d=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;let t='';
+  for(let i=1;i<=Math.min(d.numPages,80);i++)t+=(await(await d.getPage(i)).getTextContent()).items.map(x=>x.str).join(' ')+'\n';
+  return t;
+}
+async function upl(files){
+  const subj=$('#sn').value.trim()||'General',errs=[],msg=t=>{const e=$('#msg');if(e)e.textContent=t};
+  for(const f of files){
+    msg('Reading '+f.name+'...');
+    try{
+      let t;
+      if(f.type.startsWith('image/'))t=await ai('Transcribe all text in this study image, and briefly describe any diagrams, formulas or tables. Output plain text only.',{images:f,tier:'quick'});
+      else if(/\.pdf$/i.test(f.name))t=await pdfText(f);
+      else t=await f.text();
+      if(!t||t.trim().length<20)throw new Error('no readable text found (scanned PDF? upload the pages as images instead)');
+      add(f.name,t,subj);
+    }catch(e){errs.push('⚠️ '+f.name+': '+e.message)}
+  }
+  render();if(errs.length)$('#msg').innerHTML=errs.map(esc).join('<br>');
+}
+
+/* ---------- events ---------- */
+const act={
+  nav:v=>{view=v;render()},
+  theme:()=>{const c=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),n=c==='dark'?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('sbt',n)}catch(e){}},
+  pick:v=>{cur=v;tool=null;out={};chat=[];view='study';render()},
+  del:v=>{S.mats=S.mats.filter(m=>m.id!==v);save();render()},
+  tool:v=>{tool=v;out={};render();if(['notes','mcq','flash','qa'].includes(v))run(v)},
+  go:()=>run('explain',$('#et').value.trim()),
+  ask,
+  mo:v=>{const[i,j]=v.split(',').map(Number),q=out.mcq[i];if(q.pick==null){q.pick=j;upd()}},
+  fl:v=>{out.flash[v].flip=!out.flash[v].flip;upd()},
+  addp:()=>{const t=$('#pt').value.trim(),s=$('#sn').value.trim()||'General';if(t.length<20){$('#msg').textContent='Please paste a bit more text.';return}add($('#mt').value.trim()||'Pasted notes',t,s);render()},
+  start,reset:()=>{T=null;render()},
+  tmo:v=>{const q=T.qs[T.i];if(T.fb)return;const ok=+v===+q.answer;T.fb={ok,pick:+v,text:q.explanation};if(ok)T.score++;render()},
+  tms:short,
+  next:()=>{if(T.i+1<T.qs.length){T.i++;T.fb=null}else{const m=mat(T.mid),n=T.qs.length,p=Math.round(T.score/n*100);S.quizzes.push({name:m?m.name:'Quiz',subject:m?m.subject:'General',score:T.score,total:n,pct:p,date:Date.now()});if(m)mark(m,'test');save();T.done=true}render()}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&act[b.dataset.a])act[b.dataset.a](b.dataset.v)});
+document.addEventListener('change',e=>{
+  if(e.target.id==='fi'&&e.target.files.length)upl([...e.target.files]);
+  if(e.target.id==='ms'){cur=e.target.value;tool=null;out={};chat=[];render()}
+});
+render();
+</script></body></html>
